@@ -1,0 +1,39 @@
+
+## 修改后的 weather.yml
+
+```yaml
+name: Weather Notification
+
+on:
+  schedule:
+    - cron: '0 8 * * *'  # 每天8点运行
+  workflow_dispatch:  # 允许手动触发
+
+jobs:
+  weather:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+        
+    - name: Install dependencies
+      run: pip install requests
+      
+    - name: Run weather script
+      env:
+        WEATHER_API_KEY: ${{ secrets.WEATHER_API_KEY }}
+        WEATHER_API_HOST: ${{ secrets.WEATHER_API_HOST }}
+        WEATHER_CITIES: ${{ secrets.WEATHER_CITIES }}
+        TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        WECHAT_WORK_WEBHOOK: ${{ secrets.WECHAT_WORK_WEBHOOK }}
+        NOTIFY_GITHUB_TOKEN: ${{ secrets.NOTIFY_GITHUB_TOKEN }}
+        NOTIFY_REPO_OWNER: ${{ secrets.NOTIFY_REPO_OWNER }}
+        NOTIFY_REPO_NAME: ${{ secrets.NOTIFY_REPO_NAME }}
+        NOTIFY_FILE_PATH: ${{ secrets.NOTIFY_FILE_PATH }}
+      run: python3 weather.py ql

@@ -13,10 +13,10 @@ const DEFAULT_CONFIG = {
   WECOM_TO_USER: '@all',
   MAX_RETRY: 3,
   ENABLE_HISTORY: true,
-  // GitHub 配置
-  GITHUB_TOKEN: '',
-  GITHUB_REPO: '',
-  GITHUB_BRANCH: 'main'
+  // GitHub 配置 - 使用 IKUUU_GH_ 前缀避免冲突
+  GH_TOKEN: '',
+  GH_REPO: '',
+  GH_BRANCH: 'main'
 };
 
 let config = { ...DEFAULT_CONFIG };
@@ -184,10 +184,10 @@ class GitHubNotifier {
   // 获取 data.json 文件的 SHA
   async getFileSha() {
     try {
-      const url = `${this.baseUrl}/repos/${config.GITHUB_REPO}/contents/data.json`;
+      const url = `${this.baseUrl}/repos/${config.GH_REPO}/contents/data.json`;
       const response = await fetch(url, {
         headers: {
-          'Authorization': `token ${config.GITHUB_TOKEN}`,
+          'Authorization': `token ${config.GH_TOKEN}`,
           'Accept': 'application/vnd.github.v3+json'
         }
       });
@@ -222,7 +222,7 @@ class GitHubNotifier {
   
   // 更新 GitHub 通知
   async updateGitHubNotification(results) {
-    if (!config.GITHUB_TOKEN || !config.GITHUB_REPO) {
+    if (!config.GH_TOKEN || !config.GH_REPO) {
       console.log('⚠️ GitHub 配置不完整，跳过更新通知');
       return;
     }
@@ -230,10 +230,10 @@ class GitHubNotifier {
     try {
       console.log('🔄 开始更新 GitHub 通知...');
       
-      const url = `${this.baseUrl}/repos/${config.GITHUB_REPO}/contents/data.json`;
+      const url = `${this.baseUrl}/repos/${config.GH_REPO}/contents/data.json`;
       const response = await fetch(url, {
         headers: {
-          'Authorization': `token ${config.GITHUB_TOKEN}`,
+          'Authorization': `token ${config.GH_TOKEN}`,
           'Accept': 'application/vnd.github.v3+json'
         }
       });
@@ -283,7 +283,7 @@ class GitHubNotifier {
       const updateResponse = await fetch(url, {
         method: 'PUT',
         headers: {
-          'Authorization': `token ${config.GITHUB_TOKEN}`,
+          'Authorization': `token ${config.GH_TOKEN}`,
           'Accept': 'application/vnd.github.v3+json',
           'Content-Type': 'application/json'
         },
@@ -291,7 +291,7 @@ class GitHubNotifier {
           message: `更新 ikuuu 签到状态 - ${timeString}`,
           content: Buffer.from(JSON.stringify(jsonData, null, 2)).toString('base64'),
           sha: fileData.sha,
-          branch: config.GITHUB_BRANCH
+          branch: config.GH_BRANCH
         })
       });
       
@@ -344,10 +344,10 @@ function initializeConfig() {
     WECOM_TO_USER: env.IKUUU_WECOM_TO_USER || env.WECOM_TO_USER || '@all',
     MAX_RETRY: parseInt(env.IKUUU_MAX_RETRY || env.MAX_RETRY || '3'),
     ENABLE_HISTORY: env.IKUUU_ENABLE_HISTORY !== 'false',
-    // GitHub 配置
-    GITHUB_TOKEN: env.IKUUU_GITHUB_TOKEN || env.GITHUB_TOKEN,
-    GITHUB_REPO: env.IKUUU_GITHUB_REPO || env.GITHUB_REPO,
-    GITHUB_BRANCH: env.IKUUU_GITHUB_BRANCH || env.GITHUB_BRANCH || 'main'
+    // GitHub 配置 - 使用 IKUUU_GH_ 前缀
+    GH_TOKEN: env.IKUUU_GH_TOKEN || env.GH_TOKEN,
+    GH_REPO: env.IKUUU_GH_REPO || env.GH_REPO,
+    GH_BRANCH: env.IKUUU_GH_BRANCH || env.GH_BRANCH || 'main'
   };
 
   console.log('✅ 配置初始化完成');
@@ -355,7 +355,7 @@ function initializeConfig() {
   console.log(`👥 账户数: ${config.ACCOUNTS.length}`);
   console.log(`🔄 最大重试: ${config.MAX_RETRY}`);
   console.log(`📚 历史记录: ${config.ENABLE_HISTORY ? '启用' : '禁用'}`);
-  console.log(`🐙 GitHub 通知: ${config.GITHUB_TOKEN && config.GITHUB_REPO ? '启用' : '禁用'}`);
+  console.log(`🐙 GitHub 通知: ${config.GH_TOKEN && config.GH_REPO ? '启用' : '禁用'}`);
 }
 
 // 主签到函数

@@ -19,8 +19,28 @@ jobs:
           
       - name: Run ikuuu Checkin
         env:
+          # 账户配置
           IKUUU_ACCOUNTS: ${{ secrets.IKUUU_ACCOUNTS }}
+          
+          # Telegram 配置
           IKUUU_TG_BOT_TOKEN: ${{ secrets.IKUUU_TG_BOT_TOKEN }}
           IKUUU_TG_CHAT_ID: ${{ secrets.IKUUU_TG_CHAT_ID }}
+          
+          # 企业微信配置
+          IKUUU_QYWX_WEBHOOK: ${{ secrets.IKUUU_QYWX_WEBHOOK }}
+          IKUUU_WECOM_CORPID: ${{ secrets.IKUUU_WECOM_CORPID }}
+          IKUUU_WECOM_AGENT_ID: ${{ secrets.IKUUU_WECOM_AGENT_ID }}
+          IKUUU_WECOM_SECRET: ${{ secrets.IKUUU_WECOM_SECRET }}
+          IKUUU_WECOM_TO_USER: ${{ secrets.IKUUU_WECOM_TO_USER }}
+          
+          # GitHub 通知配置
+          IKUUU_GH_TOKEN: ${{ secrets.IKUUU_GH_TOKEN }}
+          IKUUU_GH_REPO: ${{ secrets.IKUUU_GH_REPO }}
+          IKUUU_GH_BRANCH: ${{ secrets.IKUUU_GH_BRANCH }}
+          
+          # 其他配置
+          IKUUU_DOMAIN: ${{ secrets.IKUUU_DOMAIN }}
+          IKUUU_MAX_RETRY: ${{ secrets.IKUUU_MAX_RETRY }}
+          IKUUU_ENABLE_HISTORY: ${{ secrets.IKUUU_ENABLE_HISTORY }}
         run: |
           node ikuuu.js
